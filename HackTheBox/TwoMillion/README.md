@@ -133,7 +133,7 @@ using BurpSuite. Providing my username returned a valid VPN key. I tried connect
 
 ![Admin VPN](assets/images/got-admin-vpn.PNG)
 
-## Command Injection & Shell Access
+## Initial Foothold
 
 Testing the username field further in BurpSuite revealed command injection.
 
