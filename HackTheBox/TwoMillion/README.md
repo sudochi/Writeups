@@ -172,11 +172,11 @@ I logged into MySQL as the user 'admin' and discovered:
 
 Exploring the filesystem more, I discovered a /mail folder for admin. Inside, I found mail discussing kernel vulnerabilities in OverlayFS/FUSE.
 
-## Privilege Escalation
-
 Using the admin credentials found earlier, I signed in to SSH and obtained the user flag.
 
 ![User Flag](assets/images/user-flag.PNG)
+
+## Privilege Escalation
 
 Research identified CVE-2023-0386, a Linux kernel OverlayFS vulnerability allowing privilege escalation through improper handling of setuid-capable files copied across mounts.
 
