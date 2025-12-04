@@ -159,7 +159,7 @@ Shows bash can only be ran as root.
 ```bash
 bash -p
 ```
-This command allows bash to be ran without dropping elevated privileges.
+Allows bash to be ran without dropping elevated privileges.
 
 
 Retrieved root flag:
