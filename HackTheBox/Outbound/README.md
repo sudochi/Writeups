@@ -121,7 +121,7 @@ Spawned a shell as 'Hades' (equivalent to root):
 
 Navigated to /root to retrieve final flag.
 
-![Root Flag](assets/images/root-pass.PNG)
+![Root Flag](assets/images/root-flag.PNG)
 
 ### Conclusion
 Outbound demonstrates:
