@@ -19,7 +19,7 @@ Initial webmail login credentials are provided: tyler / LhKL1o9Nm3X2
 
 ## Enumeration
 
-### Nmap Scan
+### Nmap Scan:
 
 Only two ports were open:
 20 and 80
@@ -32,7 +32,7 @@ I tried running dirsearch and ffuf against the target to find additional vhosts 
 
 ---
 
-### Vulnerability Discovery
+### Vulnerability Discovery:
 
 I login to the webmail server using the provided credentials. The About page reveals the version:
 
@@ -58,7 +58,7 @@ I upgraded my shell using:
 ```bash
 script /dev/null -c bash
 ```
-### Credential Recovery
+### Credential Recovery:
 Inside /var/www/html/roundcube/ I found:
   - Main Roundcube config
   - MySQL credentials
