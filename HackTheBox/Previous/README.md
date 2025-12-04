@@ -99,7 +99,7 @@ After reviewing the javascript, I was able to find credentials:
 
 ---
 
-## Initial Access
+## Initial Foothold
 
 Using the retrieved credentials, I logged in via SSH and retrieved the user flag:
 
