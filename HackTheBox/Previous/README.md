@@ -39,9 +39,11 @@ While browsing the site, the API endpoints were visible in the URL structure.
 I opened BurpSuite to inspect the traffic and began analyzing the framework.  
 
 Accessing the provider route:
+
 ```bash
 /api/auth/providers
 ```
+
 returned a list of callback URLs, confirming the application used Next.js authentication modules.
 
 ### Vulnerability Discovery:
@@ -55,9 +57,11 @@ I proceeded with directory fuzzing:
 - `ffuf` against `/api/` specifically  
 
 This revealed an interesting path:
+
 ```bash
 api/download
 ```
+
 Enumerating parameters for this endpoint uncovered an LFI vulnerability using the parameter `example`.
 
 Using BurpSuite, I confirmed I could read arbitrary files by accessing /etc/passwd:
@@ -67,9 +71,11 @@ Using BurpSuite, I confirmed I could read arbitrary files by accessing /etc/pass
 ### Deep Enumeration via LFI:
 
 Further LFI probing revealed:
+
 ```bash
 /proc/self/environ
 ```
+
 Which revealed the application startup path in /app.
 
 ![Environ](assets/images/proc-self-environ.PNG)
@@ -100,11 +106,13 @@ Using the retrieved credentials, I logged in via SSH and retrieved the user flag
 ```bash
 ssh previous.htb -l jeremy
 ```
+
 ![User Flag](assets/images/user-flag.PNG)
 
 ## Privilege Escalation 
 
 Running:
+
 ```bash
 sudo -l
 ```
@@ -116,22 +124,23 @@ Showed that jeremy could execute /usr/bin/terraform as root.
 Terraform is an open-source infrastructure as code (IaC) tool that allows you to define and provision infrastructure,
 such as servers, databases, and networks, using a declarative configuration language.
 
-The environment will not be reset but "env_delete+=PATH" shows that the path variable will be deleted.
+The results of **sudo -l** shows the environment will not be reset but the path variable will be deleted (**"env_delete+=PATH"**).
 
 None of the files in opt/examples have write permissions but there is config file included:
 
-![]()
-![]()
+![Opt Examples](assets/images/opt-examples.PNG)
+![Main Config](assets/images/main-config.PNG)
 
 After reviewing the offical terraform documentation (https://developer.hashicorp.com/terraform/cli/config/environment-variables) and finding which environment varibles could be used, I began to create my own provider.
 
-![]()
+![Provider](assets/images/create-provider.PNG)
 
-"dev-overrides" within the file **dev.tfrc** points to the directory where the provider is placed.
+"dev-overrides" within the file '**dev.tfrc**' points to the directory where the provider is placed.
 
-![]()
+![Dev Overrides](assets/images/dev-overrides.PNG)
 
 Executing terraform:
+
 ```bash
 export TF_CLI_CONFIG_FILE="$HOME/.terraformrc-custom"
 ```
@@ -139,18 +148,23 @@ export TF_CLI_CONFIG_FILE="$HOME/.terraformrc-custom"
 sudo /usr/bin/terraform -chdir\=/opt/examples apply
 ```
 
-![]()
+![Running Terraform](assets/images/run-terraform.PNG)
 
-Bash can be ran as root.
+```bash
+ls -la /bin/bash
+```
+Shows bash can only be ran as root.
+
 
 ```bash
 bash -p
 ```
 This command allows bash to be ran without dropping elevated privileges.
 
+
 Retrieved root flag:
 
-![]()
+![Root Flag](assets/images/root-flag.PNG)
 
 ## Conclusion
 
