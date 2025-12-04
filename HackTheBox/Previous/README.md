@@ -100,40 +100,71 @@ Using the retrieved credentials, I logged in via SSH and retrieved the user flag
 ```bash
 ssh previous.htb -l jeremy
 ```
-![]
+![User Flag](assets/images/user-flag.PNG)
 
-** Privilege Escalation 
+## Privilege Escalation 
 
 Running:
 ```bash
 sudo -l
 ```
 
-showed that jeremy could execute /usr/bin/terraform as root.
+Showed that jeremy could execute /usr/bin/terraform as root.
 
-![]
+![Terraform Priv](assets/images/terraform.PNG)
 
-Terraform, when run with elevated privileges, allows reading arbitrary files via certain modules.
-Abusing this, I constructed a simple Terraform configuration pointing to a root-owned file and executed it using sudo, retrieving the contents and escalating privileges.
+Terraform is an open-source infrastructure as code (IaC) tool that allows you to define and provision infrastructure,
+such as servers, databases, and networks, using a declarative configuration language.
 
+The environment will not be reset but "env_delete+=PATH" shows that the path variable will be deleted.
 
-################### to be continued
+None of the files in opt/examples have write permissions but there is config file included:
 
-This provided access to the root account, allowing retrieval of the final flag.
+![]()
+![]()
 
-Conclusion
+After reviewing the offical terraform documentation (https://developer.hashicorp.com/terraform/cli/config/environment-variables) and finding which environment varibles could be used, I began to create my own provider.
+
+![]()
+
+"dev-overrides" within the file **dev.tfrc** points to the directory where the provider is placed.
+
+![]()
+
+Executing terraform:
+```bash
+export TF_CLI_CONFIG_FILE="$HOME/.terraformrc-custom"
+```
+```bash
+sudo /usr/bin/terraform -chdir\=/opt/examples apply
+```
+
+![]()
+
+Bash can be ran as root.
+
+```bash
+bash -p
+```
+This command allows bash to be ran without dropping elevated privileges.
+
+Retrieved root flag:
+
+![]()
+
+## Conclusion
 
 Previous demonstrates:
 
-Enumerating exposed API functionality
+- Enumerating exposed API functionality
 
-Understanding Next.js routing and authentication mechanisms
+- Understanding Next.js routing and authentication mechanisms
 
-Exploiting a parameter-based LFI vulnerability
+- Exploiting a parameter-based LFI vulnerability
 
-Extracting credentials from compiled Next.js build files
+- Extracting credentials from compiled Next.js build files
 
-Using Terraform as a privileged binary to escalate to root
+- Using Terraform as a privileged binary to escalate to root
 
 
 
