@@ -80,12 +80,15 @@ After researching typical Next.js directory structures, I navigated through the 
 /app/.next
 ```
 
-Inside this directory, the file 'routes-manifest.json' contained the routing configuration, including internal authentication logic used by NextAuth.
-![]
+Inside this directory, the file 'routes-manifest.json' contained the routing configuration.
 
-Reviewing these server-side JavaScript bundles revealed hardcoded test credentials for the application:
+![Routes-Manifest](assets/images/routing-config.PNG)
 
-![]
+It also showed the internal authentication logic used by NextAuth, found in "/api/auth/[...nextauth]".
+
+After reviewing the javascript, I was able to find credentials:
+
+![NextAuth Credentials](assets/images/nextauth-creds.PNG)
 
 
 ---
