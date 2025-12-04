@@ -58,7 +58,7 @@ I upgraded my shell using:
 ```bash
 script /dev/null -c bash
 ```
-## Credential Recovery
+### Credential Recovery
 Inside /var/www/html/roundcube/ I found:
   - Main Roundcube config
   - MySQL credentials
@@ -99,7 +99,7 @@ Captured the user flag:
 
 ![User Flag](assets/images/user-flag.PNG)
 
-### Priviledge Escalation
+## Priviledge Escalation
 Checking sudo -l, I see Jacob has sudo access to:
 ```bash
 /usr/bin/below
@@ -123,7 +123,7 @@ Navigated to /root to retrieve final flag.
 
 ![Root Flag](assets/images/root-flag.PNG)
 
-### Conclusion
+## Conclusion
 Outbound demonstrates:
   - Enumeration
   - Real-world exploits
