@@ -26,7 +26,7 @@ ctrl + u
 ```
 reveals the following comment:
 
-![]()
+![Comment in Code](assets/images/guest-creds.PNG)
 
 
 Key observations:
@@ -44,13 +44,13 @@ Log in using the provided credentials:
 - Username: guest
 - Password: guest
 
-![]()
+![Guest Login](assets/images/guest-login.PNG)
 
 This logs you into a restricted guest dashboard.
 
 During navigation, the URL displays a user identifier:
 
-![]()
+![URL Vuln](assets/images/url-vuln.PNG)
 
 ```yaml
 ?user=guest
@@ -65,8 +65,6 @@ This is a strong indicator of an **IDOR vulnerability**.
 
 By changing the URL parameter directly:
 
-![]()
-
 ```yaml
 ?user=admin
 ```
@@ -74,6 +72,8 @@ By changing the URL parameter directly:
 
 
 and refreshing the page, the application loads the **admin page** without requiring authentication.
+
+![Flag](assets/images/flag.PNG)
 
 The admin flag is displayed immediately, confirming:
 
