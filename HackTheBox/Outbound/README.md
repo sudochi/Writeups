@@ -22,7 +22,7 @@ Initial webmail login credentials are provided: tyler / LhKL1o9Nm3X2
 ### Nmap Scan:
 
 Only two ports were open:
-20 and 80
+22 and 80
 
 ![Nmap Scan](assets/images/Nmap_scan.PNG)
 
