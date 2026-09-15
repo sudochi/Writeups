@@ -30,6 +30,7 @@ I started with a full TCP port scan using Nmap with service detection and defaul
 ```bash
 nmap -sC -sV -p- 10.129.69.206 -oA shocker_scan
 ```
+<img width="607" height="332" alt="nmap scan" src="https://github.com/user-attachments/assets/68839802-c402-45d5-9724-7a7bd1fe0add" />
 
 The scan identified two open ports:
 ```bash
@@ -48,14 +49,16 @@ The website was fairly simple and contained a JPG image of a bug along with the 
 ```bash
 Don't Bug Me!
 ```
+<img width="957" height="397" alt="website" src="https://github.com/user-attachments/assets/0feeae5a-9f9f-4d54-8181-2d922a97c43e" />
 
 Dirb:
 
 I used Dirb with the common wordlist:
 
-```basg
+```bash
 dirb http://shocker.htb/ /usr/share/dirb/wordlists/common.txt
 ```
+<img width="534" height="349" alt="dirb results" src="https://github.com/user-attachments/assets/1741c0df-d0f6-485c-8562-a62dee69fda7" />
 
 Dirb discovered three paths:
 
@@ -75,6 +78,7 @@ I used Feroxbuster to search for CGI scripts within the /cgi-bin directory:
 ```bash
 feroxbuster --url http://shocker.htb/cgi-bin -x cgi,sh
 ```
+<img width="610" height="359" alt="feroxbuster" src="https://github.com/user-attachments/assets/570339d8-846d-4084-a42e-bd4d8aafe20a" />
 
 The scan discovered a file named:
 
@@ -90,13 +94,15 @@ http://shocker.htb/cgi-bin/user.sh
 
 returned a plain-text page containing output that appeared to be from the Linux uptime command.
 
+<img width="619" height="357" alt="cgi-bin-user-sh" src="https://github.com/user-attachments/assets/e13ef83e-dec5-4c3d-ac14-5557868019ad" />
+
 This indicated that user.sh was likely a Bash script being executed by the web server.
-ShellShock
+
+### ShellShock
 
 The use of a Bash CGI script immediately raised the possibility of the ShellShock vulnerability.
 
 ShellShock, tracked as CVE-2014-6271, is a critical Bash vulnerability discovered in 2014. Under certain conditions, specially crafted environment variables can cause Bash to execute arbitrary commands.
-
 
 I started Metasploit using:
 
@@ -109,6 +115,7 @@ I then selected the Apache CGI Bash environment variable injection module:
 ```bash
 exploit/multi/http/apache_mod_cgi_bash_env_exec
 ```
+<img width="604" height="288" alt="msfconsole" src="https://github.com/user-attachments/assets/ec6d6500-13ac-459f-b59a-b29a768fa220" />
 
 After setting the required options for the target and payload, I executed the exploit.
 
@@ -117,6 +124,10 @@ The exploit was successful and provided me with a shell on the target as the use
 ```bash
 shelly
 ```
+
+<img width="608" height="252" alt="msfconsole shell" src="https://github.com/user-attachments/assets/46d28dba-4c15-4ddd-8897-a3d1b77be07c" />
+
+<img width="369" height="68" alt="shelly" src="https://github.com/user-attachments/assets/fe4c9418-075e-4a3d-b863-6d049948f06d" />
 
 This gave me an initial foothold on the machine.
 
@@ -136,6 +147,7 @@ I retrieved the user flag using:
 ```bash
 cat user.txt
 ```
+<img width="1115" height="592" alt="user flag" src="https://github.com/user-attachments/assets/e56424bb-31cd-4b82-8e01-1b4f20414397" />
 
 This successfully provided the user flag.
 
@@ -146,6 +158,8 @@ With access as shelly, I checked the user's sudo permissions:
 ```bash
 sudo -l
 ```
+<img width="608" height="150" alt="sudo l" src="https://github.com/user-attachments/assets/9f1ac4c9-f7d8-4927-b692-1d032e4e9737" />
+
 The output showed that shelly could execute perl as root.
 
 Perl's -e option allows Perl code to be executed directly from the command line. Perl can also execute system commands using the exec function.
@@ -155,6 +169,8 @@ I used the following command:
 ```bash
 sudo perl -e 'exec "/bin/bash"'
 ```
+
+<img width="433" height="50" alt="root shell" src="https://github.com/user-attachments/assets/a364ea3d-5fde-498f-afae-c2275b92c03e" />
 
 Because Perl was being executed with root privileges, the Bash shell spawned by the command also ran as root.
 
@@ -185,6 +201,8 @@ I listed the contents and retrieved the root flag:
 ```bash
 cat root.txt
 ```
+
+<img width="581" height="165" alt="root flag" src="https://github.com/user-attachments/assets/2577717c-00b2-4984-bef1-2c143f04b192" />
 
 This successfully provided the final root flag.
 
