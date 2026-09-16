@@ -30,6 +30,7 @@ I started with a full TCP port scan using Nmap with service detection and defaul
 ```bash
 nmap -sC -sV -p- 10.129.57.17 -oA nibbles_scan
 ```
+<img width="608" height="332" alt="nmap" src="https://github.com/user-attachments/assets/73a612bf-dfe5-481b-a80a-dbd42bc36722" />
 
 The scan showed that two ports were open:
 
@@ -45,6 +46,7 @@ The webpage itself was very basic and only displayed:
 ```bash
 Hello world
 ```
+<img width="740" height="353" alt="webpage" src="https://github.com/user-attachments/assets/34caf232-cc9c-4b8f-9d2f-1b2caa162eed" />
 
 Since the webpage did not reveal anything useful, I viewed the page source.
 
@@ -53,10 +55,13 @@ While inspecting the source code, I found the following comment:
 ```bash
 <!-- /nibbleblog/ directory. Nothing interesting here! -->
 ```
+<img width="580" height="317" alt="view source" src="https://github.com/user-attachments/assets/73ebd8ea-3bdd-4916-adf7-276c6eacd22a" />
 
 This revealed a potentially interesting directory, so I navigated to /nibbleblog.
 
 The directory contained a blog site with no posts. The site was running the Nibbleblog CMS.
+
+<img width="900" height="401" alt="blog" src="https://github.com/user-attachments/assets/a2144030-c544-45f4-81f5-8e5738018c2a" />
 
 ### Directory Enumeration:
 
@@ -65,6 +70,8 @@ While viewing the page source, I also noticed a JavaScript file located at:
 ```bash
 /nibbleblog/admin/js/jquery/jquery.js
 ```
+
+<img width="416" height="13" alt="admin directory src" src="https://github.com/user-attachments/assets/07b62e75-7277-45c4-b4a6-7a763ec244d3" />
 
 This suggested that an administrative directory existed under /nibbleblog/admin.
 
@@ -80,11 +87,14 @@ templates
 views
 ```
 
+<img width="482" height="317" alt="nibbleblog-admin-directories" src="https://github.com/user-attachments/assets/9bf9dd7d-5a07-40aa-9c35-f978d2a28184" />
+
 I then performed additional directory enumeration using FFUF:
 
 ```bash
 ffuf -w /usr/share/dirb/wordlists/common.txt -u http://nibbles.htb/nibbleblog/FUZZ -mc 200 -fs 42 -c -v
 ```
+<img width="605" height="283" alt="fuff" src="https://github.com/user-attachments/assets/13b1981d-d8d2-4f4e-ad19-014fb8674254" />
 
 FFUF discovered several interesting files:
 
@@ -97,9 +107,12 @@ FFUF discovered several interesting files:
 The /admin.php file was particularly interesting because it provided access to the Nibbleblog administrative login page.
 
 ## Initial Foothold
+
 ### Nibbleblog Admin Login
 
 I navigated to /nibbleblog/admin.php and was presented with the Nibbleblog login page.
+
+<img width="901" height="409" alt="admin login" src="https://github.com/user-attachments/assets/3b957446-6886-465e-aef3-25eccf327fd1" />
 
 After researching the default credentials for Nibbleblog, I found that the default username and password were:
 
@@ -110,6 +123,8 @@ Password: nibbles
 
 I successfully logged in using these credentials and gained access to the Nibbleblog administrative dashboard.
 
+<img width="898" height="347" alt="admin dashboard" src="https://github.com/user-attachments/assets/39e3b462-4c46-4b22-8223-22c87232e132" />
+
 ### Identifying the Nibbleblog Version
 
 After gaining access to the administrative dashboard, I checked the update page at:
@@ -117,6 +132,8 @@ After gaining access to the administrative dashboard, I checked the update page 
 ```bash
 /nibbleblog/update.php
 ```
+
+<img width="629" height="247" alt="nibbeblog version" src="https://github.com/user-attachments/assets/0ab57e96-5654-40ca-9cd6-afc1e22142f7" />
 
 The installed version was:
 
@@ -138,6 +155,8 @@ exploit/multi/http/nibbleblog_file_upload
 
 The module successfully exploited the authenticated file upload vulnerability and provided a reverse shell on the target.
 
+<img width="614" height="181" alt="metasploit shell" src="https://github.com/user-attachments/assets/57eed879-6627-497d-a26f-bc4a4a081d22" />
+
 Once the connection was received, I upgraded the shell to make it more interactive.
 
 I then confirmed the current user using:
@@ -151,6 +170,7 @@ The result showed:
 ```bash
 nibbler
 ```
+<img width="608" height="82" alt="whoami nibbler" src="https://github.com/user-attachments/assets/a2c2102e-aa51-423a-a0e4-d1a53fc3d4f5" />
 
 This confirmed that I had obtained command execution on the target as the `nibbler` user.
 
@@ -168,6 +188,8 @@ The user.txt file was present in the home directory. I retrieved the flag using:
 cat user.txt
 ```
 
+<img width="722" height="102" alt="user flag" src="https://github.com/user-attachments/assets/95c8bcf8-69fd-4d0a-a257-d602d44154ca" />
+
 This successfully provided the user flag.
 
 ## Privilege Escalation
@@ -178,6 +200,8 @@ After obtaining the user flag, I checked the sudo permissions available to the n
 sudo -l
 ```
 
+<img width="614" height="147" alt="sudo l" src="https://github.com/user-attachments/assets/d99d63d3-5ae6-41a5-97f9-20518ebcbec7" />
+
 The output showed that the nibbler user could execute monitor.sh as root.
 
 I navigated to the directory containing the script:
@@ -185,8 +209,6 @@ I navigated to the directory containing the script:
 ```bash
 cd /home/nibbler/personal/stuff
 ```
-
-The directory contained the monitor.sh script.
 
 Since I had permission to modify the script, this presented an opportunity to execute commands with root privileges.
 
@@ -199,6 +221,8 @@ echo "cat /root/root.txt" > monitor.sh
 I then executed the script using the sudo permissions identified earlier.
 
 Because monitor.sh was executed as root, the command inside the script also ran with root privileges. This caused the contents of /root/root.txt to be displayed.
+
+<img width="1224" height="197" alt="root flag" src="https://github.com/user-attachments/assets/89a1007f-00ef-47b3-ae9c-4ea99aab0733" />
 
 The root flag was successfully retrieved.
 
