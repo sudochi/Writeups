@@ -5,6 +5,10 @@
 **Tech Used:** Nmap, Dirb, Feroxbuster, Metasploit, ShellShock, Perl, Linux privilege escalation  
 **Objective:** Demonstrate web enumeration, exploitation of the ShellShock vulnerability, obtaining a user shell, and escalating privileges to root.
 
+
+**By:** Ce'Bria Haynes |
+**Published:** 9/8/2026
+
 ---
 
 ## Overview
