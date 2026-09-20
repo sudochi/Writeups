@@ -4,7 +4,8 @@
 **Difficulty:** Easy  
 **Tech Used:** Nmap, Dirb, PHPBash, Linux privilege escalation, Reverse Shell, Cron  
 **Objective:** Demonstrate web enumeration, exploitation of an exposed web shell, user enumeration, and privilege escalation to root.
-**By:** Ce'Bria Haynes
+
+**By:** Ce'Bria Haynes |
 **Published:** 9/8/2026
 
 ---
