@@ -5,6 +5,10 @@
 **Tech Used:** Nmap, FFUF, Nibbleblog, Metasploit, Reverse Shell, Linux privilege escalation, Sudo  
 **Objective:** Demonstrate web enumeration, exploitation of a vulnerable CMS, obtaining a user shell, and privilege escalation to root.
 
+
+**By:** Ce'Bria Haynes |
+**Published:** 9/8/2026
+
 ---
 
 ## Overview
